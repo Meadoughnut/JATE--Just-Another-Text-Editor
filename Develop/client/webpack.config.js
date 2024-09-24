@@ -7,29 +7,31 @@ module.exports = () => {
   return {
     mode: 'development',
     entry: {
+      // Define entry points for main app and install script
       main: './src/js/index.js',
       install: './src/js/install.js'
     },
     output: {
+      // Output bundled files to the 'dist' folder
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-      // Generates an HTML file
+      // Generates an HTML file that includes the bundled files
       new HtmlWebpackPlugin({
         template: './index.html',
         title: 'Just Another Text Editor',
       }),
 
-      // Injects the custom service worker
+      // Inject custom service worker into the generated bundle
       new InjectManifest({
         swSrc: './src-sw.js',
         swDest: 'service-worker.js',
       }),
 
-      // Creates a manifest file for the PWA
+      // Create a manifest file for the PWA
       new WebpackPwaManifest({
-        fingerprints: false,
+        fingerprints: false,  // Disable fingerprinting for consistent file names
         name: 'Just Another Text Editor',
         short_name: 'JATE',
         description: 'An offline-capable text editor',
@@ -39,6 +41,7 @@ module.exports = () => {
         publicPath: './',
         icons: [
           {
+            // Define sizes for the app's icon
             src: path.resolve('src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join('assets', 'icons'),
@@ -49,19 +52,19 @@ module.exports = () => {
 
     module: {
       rules: [
-        // CSS loaders
+        // Add rules to handle CSS files
         {
           test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
         },
-        // Babel to transpile modern JavaScript
+        // Add Babel loader for transpiling modern JavaScript
         {
           test: /\.m?js$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
+              presets: ['@babel/preset-env'], // Preset to convert ES6+ to ES5
             },
           },
         },
